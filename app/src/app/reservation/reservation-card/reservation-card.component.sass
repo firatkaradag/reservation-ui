@@ -1,0 +1,18 @@
+@use '@angular/material' as mat
+$blue: mat.define-palette(mat.$blue-palette, 500)
+
+:host 
+    max-width: 400px
+    width: 400px
+    margin: 30px
+    display: inline-block
+    text-align: left
+
+::ng-deep 
+    mat-card
+        background-color: mat.get-color-from-palette($blue, 600) !important
+    mat-chip
+        background-color: mat.get-color-from-palette($blue, 800) !important
+
+.loading
+    filter: blur(3px) brightness(0.5)

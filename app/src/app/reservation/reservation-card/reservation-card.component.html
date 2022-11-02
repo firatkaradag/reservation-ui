@@ -1,0 +1,22 @@
+<mat-card class="reservation-card" color="primary" dynamicHeight>
+  <mat-card-subtitle>{{ reservation.stay.arrivalDate | date }} - {{ reservation.stay.departureDate  | date }}</mat-card-subtitle>
+  <mat-card-title>{{reservation.firstName}} {{reservation.lastName}}</mat-card-title>
+  <mat-card-content>
+    <p>{{reservation.addressStreet?.streetNumber}} {{reservation.addressStreet?.streetName}},
+    {{reservation.addressLocation?.city}}, {{reservation.addressLocation?.state}}</p>
+    <mat-chip-list>
+      <mat-chip *ngFor="let extra of extras">
+        {{ extra }}
+      </mat-chip>
+    </mat-chip-list>
+    
+  </mat-card-content>
+  <mat-divider inset></mat-divider>
+  <mat-card-actions>
+    <button mat-raised-button color="warn" (click)="openDialog(false)">VIEW</button>
+    <button mat-raised-button color="primary" (click)="openDialog(true)">UPDATE</button>
+  </mat-card-actions>
+  <mat-card-footer>
+    <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
+  </mat-card-footer>
+</mat-card>

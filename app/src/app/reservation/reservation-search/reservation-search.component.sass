@@ -1,0 +1,17 @@
+@use '@angular/material' as mat
+
+$blue: mat.define-palette(mat.$blue-palette, 500)
+
+.search-container 
+    width: 100%
+
+mat-card
+    text-align: center
+
+    mat-form-field, .mat-flat-button
+        display: inline-block
+        margin: 5px
+
+::ng-deep 
+    mat-datepicker-content, .mat-select-panel
+        background-color: mat.get-color-from-palette($blue, 400) !important

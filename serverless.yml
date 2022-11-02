@@ -1,0 +1,57 @@
+org: fkaradag
+app: reservation
+service: reservation-ui
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+custom:
+  stage: ${opt:stage, 'dev'}
+  ui:
+    s3:
+      bucket: reservation-ui
+
+resources:
+  Resources:
+    S3BucketReservationUI:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.ui.s3.bucket}-${self:custom.stage}
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: error.html
+    BucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      Properties:
+        PolicyDocument:
+          Id: MyPolicy
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action: 's3:GetObject'
+              Resource: !Join 
+                - ''
+                - - 'arn:aws:s3:::'
+                  - !Ref S3BucketReservationUI
+                  - /*
+        Bucket: !Ref S3BucketReservationUI
+  Outputs:
+    WebsiteURL:
+      Value: !GetAtt 
+        - S3BucketReservationUI
+        - WebsiteURL
+      Description: URL for website hosted on S3
+    S3BucketSecureURL:
+      Value: !Join 
+        - ''
+        - - 'https://'
+          - !GetAtt 
+            - S3BucketReservationUI
+            - DomainName
+      Description: Name of S3 bucket to hold website content

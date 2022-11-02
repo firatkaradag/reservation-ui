@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat
+
+$pink: mat.define-palette(mat.$pink-palette, 500)
+$blue: mat.define-palette(mat.$blue-palette, 500)
+
+.bg-light-pink
+    background-color: mat.get-color-from-palette($pink, 200)
+
+.bg-pink
+    background-color: mat.get-color-from-palette($pink, 400)
+
+.bg-blue
+    background-color: mat.get-color-from-palette($blue, 400)
+
+.bg-dark-blue
+    background-color: mat.get-color-from-palette($blue, 800)

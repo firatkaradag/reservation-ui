@@ -1,0 +1,7 @@
+<app-reservation-search (search)="search($event)"></app-reservation-search>
+<mat-spinner [mode]="loader.mode" [value]="loader.value" [color]="loader.color" [diameter]="50" *ngIf="loading"></mat-spinner> 
+<div class="reservations-container" *ngIf="!loading">
+    <app-reservation-card (update)="update($event)" *ngFor="let reservation of reservations" [reservation]="reservation"></app-reservation-card>
+</div>
+
+

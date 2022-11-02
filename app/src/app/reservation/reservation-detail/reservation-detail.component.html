@@ -1,0 +1,158 @@
+<div class="form-title">
+    <h2>Reservation Detail</h2>
+    <mat-spinner [mode]="loader.mode" [value]="loader.value" [color]="loader.color" [diameter]="20" *ngIf="loading"></mat-spinner>    
+</div>
+<mat-dialog-content [ngClass]="{'loading': loading}">
+    <section id="reservation-stay">
+        <mat-form-field>
+            <mat-label>Date of Arrival</mat-label>
+            <input matInput [matDatepicker]="pickerArrival" [(ngModel)]="reservation.stay.arrivalDate" [disabled]="disabled">
+            <mat-datepicker-toggle matSuffix [for]="pickerArrival"></mat-datepicker-toggle>
+            <mat-datepicker #pickerArrival></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Date of Departure</mat-label>
+            <input matInput [matDatepicker]="pickerDeparture" [(ngModel)]="reservation.stay.departureDate" [disabled]="disabled">
+            <mat-datepicker-toggle matSuffix [for]="pickerDeparture"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDeparture></mat-datepicker>
+        </mat-form-field>
+    </section>
+    <section id="reservation-room">
+        <mat-form-field>
+            <mat-label>Room Size</mat-label>
+            <mat-hint *ngIf="!disabled">Choose a room type</mat-hint>
+            <select matNativeControl [(ngModel)]="reservation.room.roomSize" [disabled]="disabled">
+            <option *ngFor="let size of RoomSize | keyvalue" [value]="size.key" [disabled]="readonly">{{size.value}}</option>
+            </select>
+        </mat-form-field>
+        <br />
+        <br />
+        <mat-form-field>
+            <mat-label>Room Quantity</mat-label>
+            <mat-hint *ngIf="!disabled">Maximum: {{MAX_ROOM_QUANTITY}}</mat-hint>
+            <input matInput type="number" [max]="MAX_ROOM_QUANTITY" [min]="MIN_ROOM_QUANTITY" [(ngModel)]="reservation.room.roomQuantity" [disabled]="disabled" (change)="checkRoomQuantity($event)">
+        </mat-form-field>
+    </section>
+    <section id="reservation-first-name">
+        <mat-form-field>
+            <mat-label>First Name</mat-label>
+            <mat-hint align="end" *ngIf="!disabled">{{reservation.firstName.length}}/{{MAX_FIRST_NAME}}</mat-hint>
+            <input matInput [(ngModel)]="reservation.firstName" [disabled]="disabled">
+        </mat-form-field>
+    </section>
+    <section id="reservation-last-name">
+        <mat-form-field>
+            <mat-label>Last Name</mat-label>
+            <mat-hint align="end" *ngIf="!disabled">{{reservation.lastName.length}}/{{MAX_LAST_NAME}}</mat-hint>
+            <input matInput [(ngModel)]="reservation.lastName" [disabled]="disabled">
+        </mat-form-field>
+    </section>
+    <section id="reservation-email">
+        <mat-form-field>
+            <mat-label>E-Mail</mat-label>
+            <input matInput [(ngModel)]="reservation.email" [disabled]="disabled">
+        </mat-form-field>
+    </section>
+    <section id="reservation-phone">
+        <mat-form-field>
+            <mat-label>Phone Number</mat-label>
+            <mat-hint *ngIf="!disabled">Add your country code first</mat-hint>
+            <input matInput [(ngModel)]="reservation.phone" [disabled]="disabled">
+        </mat-form-field>
+    </section>
+    <section id="reservation-address-street">
+        <mat-form-field>
+            <mat-label>Street Name</mat-label>
+            <input matInput [(ngModel)]="reservation.addressStreet.streetName" [disabled]="disabled">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Street Number</mat-label>
+            <input matInput [(ngModel)]="reservation.addressStreet.streetNumber" [disabled]="disabled">
+        </mat-form-field>
+    </section>
+    <section id="reservation-address-location">
+        <mat-form-field>
+            <mat-label>ZIP</mat-label>
+            <input matInput [(ngModel)]="reservation.addressLocation.zipCode" [disabled]="disabled">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>State</mat-label>
+            <input matInput [(ngModel)]="reservation.addressLocation.state" [disabled]="disabled">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>City</mat-label>
+            <input matInput [(ngModel)]="reservation.addressLocation.city" [disabled]="disabled">
+        </mat-form-field>
+    </section>
+    <br/>
+    <section id="reservation-extras">
+        <mat-label>Extras</mat-label>
+        <br/>
+        <mat-checkbox color="primary" *ngFor="let extra of extras" [disabled]="disabled" [checked]="extra.checked">{{extra.value}}</mat-checkbox>
+        <mat-select multiple *ngIf="!disabled" [(ngModel)]="reservation.extras">
+            <mat-option *ngFor="let extra of Extra | keyvalue " [value]="extra.value">{{ getExtraText(extra.value) }}</mat-option>
+        </mat-select>
+    </section>
+    <br/>
+    <section id="reservation-payment">
+        <mat-label>Payment</mat-label>
+        <br/>
+        <mat-radio-group color="primary" [(ngModel)]="reservation.payment">
+            <mat-radio-button [disabled]="readonly" [value]="PaymentType.CREDIT_CARD">Credit Card</mat-radio-button>
+            <mat-radio-button [disabled]="readonly" [value]="PaymentType.PAYPAL">Paypal</mat-radio-button>
+            <mat-radio-button [disabled]="readonly" [value]="PaymentType.CASH">Cash</mat-radio-button>
+            <mat-radio-button [disabled]="readonly" [value]="PaymentType.BITCOIN">Bitcoin</mat-radio-button>
+        </mat-radio-group>
+    </section>
+    <br/>
+    <section id="reservation-note">
+        <mat-label>Note</mat-label>
+        <br/>
+        <mat-form-field>
+            <textarea matInput [(ngModel)]="reservation.note" [disabled]="disabled">{{reservation.note}}</textarea>
+        </mat-form-field>
+    </section>
+    <section id="reservation-tags">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Tags</mat-label>
+            <mat-chip-list #chipList [(ngModel)]="reservation.tags" aria-label="Tags">
+              <mat-chip *ngFor="let tag of tags" (removed)="removeTag(tag)" [disabled]="readonly">
+                {{tag}}
+                <button matChipRemove *ngIf="!disabled">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
+              <input *ngIf="!disabled" placeholder="New Tag..."
+                     [matChipInputFor]="chipList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     [matChipInputAddOnBlur]="addOnBlur"
+                     (matChipInputTokenEnd)="addTag($event)">
+            </mat-chip-list>
+          </mat-form-field>
+    </section>
+    <section id="reservation-preferences">
+        <mat-slide-toggle color="primary" [(ngModel)]="reservation.reminder" [disabled]="disabled">Send me a reminder</mat-slide-toggle>
+        <br />
+        <mat-slide-toggle color="primary" [(ngModel)]="reservation.newsletter" [disabled]="disabled">Subscribe to newsletter</mat-slide-toggle>
+        <br />
+        <mat-checkbox color="primary" [disabled]="disabled" [(ngModel)]="reservation.confirm">I confirm the information given above</mat-checkbox>
+    </section>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <section class="align-right full-width">
+        <button mat-raised-button color="accent" (click)="cancelReservation()">{{disabled ? 'CLOSE' : 'CANCEL'}}</button> 
+        <button mat-raised-button color="warn" (click)="saveReservation()" *ngIf="!disabled || saving">
+            <div [ngClass]="{'saving':saving}">SAVE
+                <mat-spinner [mode]="saveLoader.mode" [value]="saveLoader.value" [color]="saveLoader.color" [diameter]="20" *ngIf="saving"></mat-spinner>
+            </div>
+        </button> 
+          
+    </section>
+    <section class="delete-button-section">
+        <button mat-button mat-stroked-button color="accent" (click)="deleteReservation()" *ngIf="modify">
+            <mat-icon aria-hidden="false" aria-label="delete reservation" fontIcon="delete" color="primary"></mat-icon>
+            click here to delete your reservation
+            <mat-progress-bar mode="indeterminate" *ngIf="deleting"></mat-progress-bar>
+        </button>
+    </section>
+</mat-dialog-actions>
