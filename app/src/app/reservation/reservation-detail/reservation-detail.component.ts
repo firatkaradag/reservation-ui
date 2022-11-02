@@ -20,7 +20,6 @@ export interface Loader {
 })
 export class ReservationDetailComponent implements OnInit {
 
-  
   MIN_ROOM_QUANTITY = 1;
   MAX_ROOM_QUANTITY = 5;
   MAX_FIRST_NAME = 25;
@@ -37,54 +36,59 @@ export class ReservationDetailComponent implements OnInit {
   addOnBlur = true
 
   deleting = false;
-  saving: boolean = false;
+  saving = false;
   saveLoader: Loader = {
     color: 'primary',
     mode: 'indeterminate',
     value: 50 
   }
-  loading: boolean = false;
+  loading = false;
   loader: Loader = {
     color: 'accent',
     mode: 'indeterminate',
     value: 50 
   }
-  modify: boolean= false;
-  disabled: boolean = true;
+  modify = false;
+  disabled = true;
   reservation: Reservation;
-  extras: any[] = []
+  extras: { checked: boolean, value: string }[] = []
   PaymentType = PaymentType
   tags: string[] = []
   RoomSize = RoomSize
+  reservationId: string | undefined = undefined
   
   constructor(
     public reservationService: ReservationService,
     public dialogRef: MatDialogRef<ReservationDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { reservationId: string, disabled: boolean, action: string, loading: boolean }
-    ) { 
-      this.loading = data.loading;
-      this.disabled = data.disabled
-      this.modify = data.action == 'modify';
-      
-      this.reservation = this.reservationService.getGhostReservation();
-      if (data && data.reservationId) {
-        this.reservationService.getReservation(data.reservationId).subscribe(response => this.show(response.data));
-      }
+  ) { 
+    this.loading = data.loading;
+    this.disabled = data.disabled
+    this.modify = data.action == 'modify';
+    
+    this.reservation = this.reservationService.getGhostReservation();
+    if (data && data.reservationId) {
+      this.reservationId = data.reservationId
+    }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.reservationId) {
+      this.reservationService.getReservation(this.reservationId).subscribe(response => this.show(response.data));
+    }
+  }
 
   show = (reservation: Reservation) => {
     this.reservation = reservation;
     this.tags = reservation.tags;
     if (this.disabled) {
       this.extras = Object.values(Extra)
-      .map(extra => {
-        return {
-          checked: reservation.extras.includes(extra),
-          value: extra.replace('extra', '')
-        }
-      })
+        .map(extra => {
+          return {
+            checked: reservation.extras.includes(extra),
+            value: extra.replace('extra', '')
+          }
+        })
     }
     this.loading = false;
   }
@@ -140,11 +144,14 @@ export class ReservationDetailComponent implements OnInit {
     this.closeDialog('canceled');
   }
 
-  checkRoomQuantity = (event: any) => {
-    let value = event.target!.value ?? 1;
-    if (value > event.target.max) value = event.target.max;
-    if (value < event.target.min) value = event.target.min;
-    event.target!.value = Math.ceil(value);
+  checkRoomQuantity = (event: InputEvent) => {
+    const input = <HTMLInputElement>event.target
+    if (input) {
+      let value = input.value ?? "1";
+      if (value > input.max) value = input.max;
+      if (value < input.min) value = input.min;
+      input.value = Math.ceil(+value).toString();
+    }
   }
 
   showErrorMessage = (msg: string) => {

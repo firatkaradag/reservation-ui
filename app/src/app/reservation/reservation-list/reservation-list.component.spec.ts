@@ -2,7 +2,6 @@ import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/cor
 
 import { ReservationService } from '../services/reservation.service';
 import { ReservationListComponent } from './reservation-list.component';
-import { of } from 'rxjs';
 import { fakeAPIResponseReservationShortList } from 'src/mocks/fake-mocks';
 import { ReservationModule } from '../reservation.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,8 +11,8 @@ import { By } from '@angular/platform-browser';
 describe('ReservationListComponent', () => {
   let component: ReservationListComponent;
   let fixture: ComponentFixture<ReservationListComponent>;
-  let reservationServiceSpy = jasmine.createSpyObj('ReservationService', ['getReservations']);
-  let fakeAPIResponse = jasmine.createSpyObj('APIResponse', fakeAPIResponseReservationShortList)
+  const reservationServiceSpy = jasmine.createSpyObj('ReservationService', ['getReservations']);
+  const fakeAPIResponse = jasmine.createSpyObj('APIResponse', fakeAPIResponseReservationShortList)
   let searchCriteria: SearchCriteria = {};
 
   beforeEach(async () => {
@@ -23,8 +22,7 @@ describe('ReservationListComponent', () => {
       providers: [
         {provider: ReservationService, useValue: reservationServiceSpy },
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ReservationListComponent);
     component = fixture.componentInstance;

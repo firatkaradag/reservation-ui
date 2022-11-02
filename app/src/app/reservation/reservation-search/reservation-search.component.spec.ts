@@ -16,7 +16,7 @@ describe('ReservationSearchComponent', () => {
   let component: ReservationSearchComponent;
   let fixture: ComponentFixture<ReservationSearchComponent>;
   let dialogSpy: jasmine.Spy;
-  let dialogRefSpyObj = jasmine.createSpyObj({ afterClosed : of({action: 'canceled'}), close: null });
+  const dialogRefSpyObj = jasmine.createSpyObj({ afterClosed : of({action: 'canceled'}), close: null });
   
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,10 +33,10 @@ describe('ReservationSearchComponent', () => {
       declarations: [ ReservationSearchComponent ],
       providers: [MatDatepickerModule, MatDialogModule]
     })
-    .overrideComponent(ReservationSearchComponent, {
-      set: { changeDetection: ChangeDetectionStrategy.Default }
-    })
-    .compileComponents();
+      .overrideComponent(ReservationSearchComponent, {
+        set: { changeDetection: ChangeDetectionStrategy.Default }
+      })
+      .compileComponents();
 
     dialogSpy = spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
     fixture = TestBed.createComponent(ReservationSearchComponent);

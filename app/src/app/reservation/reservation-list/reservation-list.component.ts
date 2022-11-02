@@ -25,11 +25,11 @@ export class ReservationListComponent implements OnInit {
   }
   searchCriteria: SearchCriteria = {};
   reservations: ReservationShort[] = []
-  constructor(public reservationService: ReservationService) { 
+  constructor(public reservationService: ReservationService) {}
+
+  ngOnInit(): void { 
     this.search(this.searchCriteria);
   }
-
-  ngOnInit(): void { }
   update = (status: string) => {
     if (status !== 'canceled') {
       this.search(this.searchCriteria)

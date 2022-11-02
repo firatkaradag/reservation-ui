@@ -7,10 +7,10 @@ import { ReservationService } from './reservation.service';
 
 describe('ReservationService', () => {
   let service: ReservationService;
-  let httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+  const httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
   let reservation: Reservation;
-  let id = fakeReservationId
-  let message = fakeAPIResponseMessage
+  const id = fakeReservationId
+  const message = fakeAPIResponseMessage
 
   beforeEach(() => {
     TestBed.configureTestingModule({

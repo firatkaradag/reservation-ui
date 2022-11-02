@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Extra, ReservationShort } from '../models/reservation';
@@ -9,7 +9,7 @@ import { ReservationDetailComponent } from '../reservation-detail/reservation-de
   templateUrl: './reservation-search.component.html',
   styleUrls: ['./reservation-search.component.sass']
 })
-export class ReservationSearchComponent implements OnInit {
+export class ReservationSearchComponent {
 
   @Output() search = new EventEmitter()
 
@@ -25,8 +25,6 @@ export class ReservationSearchComponent implements OnInit {
   };
 
   constructor(public dialog: MatDialog) {}
-
-  ngOnInit(): void { }
 
   bookReservation = () => {
     const dialogRef = this.dialog.open(ReservationDetailComponent, {
