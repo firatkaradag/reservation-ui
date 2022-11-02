@@ -63,7 +63,7 @@ describe('ReservationListComponent', () => {
     }))
   });
 
-  fit('should show reservation short definition on init with criteria', () => {
+  it('should show reservation short definition on init with criteria', () => {
     // reservationServiceSpy.getReservations.and.returnValue(fakeAPIResponse)
     searchCriteria = { 
       stay: { arrivalDate: new Date(), departureDate: new Date()}, 

@@ -144,7 +144,7 @@ export class ReservationDetailComponent implements OnInit {
     this.closeDialog('canceled');
   }
 
-  checkRoomQuantity = (event: InputEvent) => {
+  checkRoomQuantity = (event: Event) => {
     const input = <HTMLInputElement>event.target
     if (input) {
       let value = input.value ?? "1";
